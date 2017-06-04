@@ -64,8 +64,7 @@ namespace Ubrowser
             {
                 timer.IsEnabled = false;
                 mouseDown_i = 0;
-                this.WindowState = this.WindowState == WindowState.Maximized ?
-                              WindowState.Normal : WindowState.Maximized;
+                btn_max_Click(sender,e);
             }
         }
         
@@ -80,15 +79,32 @@ namespace Ubrowser
         /// <summary>
         /// 窗口最大化与还原
         /// </summary>
+        private Boolean is_Max = false;
+        private double window_Height=0, window_Width=0 ,window_Top=0 ,window_Left=0;
         private void btn_max_Click(object sender, RoutedEventArgs e)
         {
-            if (this.WindowState == WindowState.Maximized)
+            if (is_Max)
             {
-                this.WindowState = WindowState.Normal; //设置窗口还原
+                this.Width = window_Width;
+                this.Height = window_Height;
+                this.Left = window_Left;
+                this.Top = window_Top;
+                is_Max = false;
             }
             else
             {
-                this.WindowState = WindowState.Maximized; //设置窗口最大化
+                //先保存窗口大小和位置的信息
+                window_Height = this.Height;
+                window_Width  = this.Width;
+                window_Top    = this.Top;
+                window_Left   = this.Left;
+
+                Rect rc = SystemParameters.WorkArea;//获取工作区大小  
+                this.Left = 0;//设置位置  
+                this.Top = 0;
+                this.Width = rc.Width;
+                this.Height = rc.Height;
+                is_Max = true;
             }
         }
 

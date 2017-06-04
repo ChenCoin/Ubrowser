@@ -266,8 +266,17 @@
         </Style>
     </Window.Resources>
 
-    <Grid>
-        <TabControl HorizontalAlignment="Left" Height="600" VerticalAlignment="Top" Width="800" SelectionChanged="TabControl_SelectionChanged">
+    <Grid Background="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TabControl  SelectionChanged="TabControl_SelectionChanged" 
+                    Grid.Row="0" Grid.Column="0"
+                     HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+            
             <TabItem Header="主页" Style="{StaticResource HomeStyle}">
                 <Grid Background="#FFFFFFFF">
                     <Grid.RowDefinitions>
@@ -279,14 +288,14 @@
                         <Button Content="" Height="28" Width="28" BorderBrush="Black" BorderThickness="1" Margin="0,0,16,0"/>
                         <Button Content="" Height="28" Width="28" BorderBrush="Black" BorderThickness="1" Margin="0,0,16,0"/>
                         <Button Content="" Height="28" Width="28" BorderBrush="Black" BorderThickness="1" Margin="0,0,16,0"/>
-                        <Button Content="" Height="28" Width="28" BorderBrush="Black" BorderThickness="1" Margin="0,0,16,0"/>
+                        <Button Content="" Height="28" Width="28" BorderBrush="Black" BorderThickness="1" Margin="0,0,16,0" Click="btn_max_Click"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  Grid.Row="1" VerticalAlignment="Bottom" >
                         <TextBox  Height="28" Width="384" Margin="5" FontWeight="Normal" VerticalContentAlignment="Center" Padding="0" UseLayoutRounding="False">
                             <TextBox.Resources>
                                 <VisualBrush x:Key="HintText" TileMode="None" Opacity="0.5" Stretch="None" AlignmentX="Left" >
                                     <VisualBrush.Visual>
-                                        <TextBlock FontStyle="Italic" Text="请输入用户名"/>
+                                        <TextBlock FontStyle="Italic" Text="请输入网址"/>
                                     </VisualBrush.Visual>
                                 </VisualBrush>
                             </TextBox.Resources>
