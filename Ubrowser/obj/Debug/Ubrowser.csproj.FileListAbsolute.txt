@@ -1,0 +1,14 @@
+c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\bin\Debug\Ubrowser.exe.config
+c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\bin\Debug\Ubrowser.exe
+c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\bin\Debug\Ubrowser.pdb
+c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\Ubrowser.csprojResolveAssemblyReference.cache
+c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\MainWindow.g.cs
+c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\App.g.cs
+c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\Ubrowser_MarkupCompile.cache
+c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\Ubrowser_MarkupCompile.lref
+c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\MainWindow.baml
+c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\Ubrowser.g.resources
+c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\Ubrowser.Properties.Resources.resources
+c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\Ubrowser.csproj.GenerateResource.Cache
+c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\Ubrowser.exe
+c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\Ubrowser.pdb
