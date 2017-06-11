@@ -12,3 +12,9 @@ c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\
 c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\Ubrowser.csproj.GenerateResource.Cache
 c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\Ubrowser.exe
 c:\users\coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\Ubrowser.pdb
+C:\Users\Coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\bin\Debug\Ubrowser.exe.manifest
+C:\Users\Coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\bin\Debug\Ubrowser.application
+C:\Users\Coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\Ubrowser.exe.manifest
+C:\Users\Coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\Ubrowser.application
+C:\Users\Coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\bin\Debug\Image\maximize_in_normal.png
+C:\Users\Coin\documents\visual studio 2017\Projects\Ubrowser\Ubrowser\obj\Debug\Ubrowser_Content.g.cs
