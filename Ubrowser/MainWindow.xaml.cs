@@ -8,6 +8,8 @@ using mshtml;
 using System.Windows.Media;
 using System.IO;
 using System.Windows.Markup;
+using System.Xml;
+using System.Collections.Generic;
 
 namespace Ubrowser
 {
@@ -20,12 +22,6 @@ namespace Ubrowser
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -332,15 +328,24 @@ namespace Ubrowser
             addbokmarkview.Visibility = Visibility.Collapsed;
             ( (TabItem)tab_control.Items.GetItemAt(select) ).IsSelected = true;
 
+            add_bm_toView(browser_title.Text, browser_uri.Text);
+            writeBookmark(browser_title.Text, browser_uri.Text);
+        }
+
+        private void add_bm_toView(String title,String uri)
+        {
+            title = (title.Length<10 ? title:title.Substring(0,10));
             Button btn = new Button
             {
-                Content = browser_title.Text,
-                Tag = browser_uri.Text,
+                Content = title,
+                Tag = uri,
                 Height = 24,
-                Width = 64,
+                Width = 96,
                 Margin = new Thickness(10),
-                VerticalAlignment = VerticalAlignment.Top,
-                HorizontalAlignment = HorizontalAlignment.Left,
+                Padding = new Thickness(5, 0, 0, 0),
+                VerticalContentAlignment = VerticalAlignment.Center,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
+                Background = System.Windows.Media.Brushes.White,
             };
             btn.Click += new RoutedEventHandler(bookmark_click);
             thebookmark.Children.Add(btn);
@@ -349,7 +354,15 @@ namespace Ubrowser
         private void bookmark_click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
-            Uri uri = new Uri(btn.Tag.ToString());
+            Uri uri;
+            try
+            {
+                uri = new Uri(btn.Tag.ToString());
+            }
+            catch (Exception)
+            {
+                uri = new Uri("http://www.baidu.com");
+            }
             CreateNewTab(uri);
         }
 
@@ -412,9 +425,115 @@ namespace Ubrowser
 
         #endregion
 
+        #region 书签本地存储
+        private void tryWrite()
+        {
+            XmlTextWriter writer = new XmlTextWriter("bookmark.xml", null);
+            //写入根元素
+            writer.WriteStartElement("items");
+            //加入子元素
+            writer.WriteElementString("title", "Unreal Tournament 2003");
+            writer.WriteElementString("title", "C&C: Renegade");
+            writer.WriteElementString("title", "Dr. Seuss's ABC");
+            //关闭根元素，并书写结束标签
+            writer.WriteEndElement();
+            //将XML写入文件并且关闭XmlTextWriter
+            writer.Close();
+        }
+
+        private void writeBookmark(String title, String uri)
+        {
+            xml_is_exist();//判断XML文件是否存在，不存在则创建
+
+            XmlDocument xmlDoc = new XmlDocument();//读取文件
+            xmlDoc.Load("bookmark.xml");
+
+            XmlNode root = xmlDoc.SelectSingleNode("bookmark");//查找<bookmark>
+
+            XmlElement xe1 = xmlDoc.CreateElement("item");//创建一个<item>节点
+            xe1.SetAttribute("title", title);//设置该节点title属性
+            xe1.SetAttribute("uri", uri);//设置该节点uri属性
+
+            /* //此处是写入子节点到XML文件，不需要
+            XmlElement xesub1 = xmlDoc.CreateElement("title");
+            xesub1.InnerText = "CS从入门到精通";//设置文本节点
+            xe1.AppendChild(xesub1);//添加到<book>节点中
+            XmlElement xesub2 = xmlDoc.CreateElement("author");
+            xesub2.InnerText = "候捷";
+            xe1.AppendChild(xesub2);
+            XmlElement xesub3 = xmlDoc.CreateElement("price");
+            xesub3.InnerText = "58.3";
+            xe1.AppendChild(xesub3);
+            */
+            root.AppendChild(xe1);//添加到<bookmark>节点中
+            xmlDoc.Save("bookmark.xml");
+        }
+
+        private List<String> readBookmark()
+        {
+            List<String> list = new List<string>();
+
+            xml_is_exist();//判断XML文件是否存在，不存在则创建
+
+            XmlDocument xmlDoc = new XmlDocument();//读取文件
+            xmlDoc.Load("bookmark.xml");
+
+            XmlNodeList nodeList = xmlDoc.SelectSingleNode("bookmark").ChildNodes;//获取bookstore节点的所有子节点
+            foreach (XmlNode xn in nodeList)//遍历所有子节点
+            {
+                XmlElement xe = (XmlElement)xn;//将子节点类型转换为XmlElement类型
+                String str1 = xe.GetAttribute("title");
+                String str2 = xe.GetAttribute("uri");
+                
+                list.Add(str1);
+                list.Add(str2);
+            }
+
+            return list;
+        }
+
+        private void xml_is_exist()
+        {
+            try
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load("bookmark.xml");
+            }
+            catch (Exception)
+            {
+                XmlTextWriter writer = new XmlTextWriter("bookmark.xml", null);
+                writer.Formatting = Formatting.Indented;//使用自动缩进便于阅读
+                writer.WriteStartElement("bookmark");//书写根元素
+
+                /* //写入子节点
+                writer.WriteStartElement("item");
+                writer.WriteEndElement();
+                */
+
+                writer.WriteFullEndElement();// 关闭根元素
+                writer.Close();//将XML写入文件并关闭writer
+            }
+        }
+
+        #endregion
+
 
         private void print(String str) {
             Console.WriteLine("--- "+str+" ---");
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            //tryWrite();
+            //程序启动后，读取本地书签，并添加到界面
+            List<String> list = readBookmark();
+
+            for (int i = 0; i < list.Count; i += 2)
+            {
+                Console.WriteLine(list[i].ToString());
+                add_bm_toView(list[i].ToString(), list[i+1].ToString());
+            }
+
         }
 
     }
