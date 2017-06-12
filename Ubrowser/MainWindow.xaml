@@ -43,13 +43,13 @@
                                                         <Setter Property="Template">
                                                             <Setter.Value>
                                                                 <ControlTemplate TargetType="{x:Type Button}">
-                                                                    <Image Name="btnbg" Source="/Image/forward_normal.png" />
+                                                                    <Image Name="btnbg" Source="/Image/bookmark_normal.png" />
                                                                     <ControlTemplate.Triggers>
                                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                                            <Setter Property="Source"  Value="/Image/forward_over.png" TargetName="btnbg" />
+                                                                            <Setter Property="Source"  Value="/Image/bookmark_over.png" TargetName="btnbg" />
                                                                         </Trigger>
                                                                         <Trigger Property="IsPressed" Value="True">
-                                                                            <Setter Property="Source" Value="/Image/forward_press.png" TargetName="btnbg" />
+                                                                            <Setter Property="Source" Value="/Image/bookmark_normal.png" TargetName="btnbg" />
                                                                         </Trigger>
                                                                     </ControlTemplate.Triggers>
                                                                 </ControlTemplate>
@@ -70,7 +70,7 @@
                                                                             <Setter Property="Source"  Value="/Image/forward_over.png" TargetName="btnbg" />
                                                                         </Trigger>
                                                                         <Trigger Property="IsPressed" Value="True">
-                                                                            <Setter Property="Source" Value="/Image/forward_press.png" TargetName="btnbg" />
+                                                                            <Setter Property="Source" Value="/Image/forward_normal.png" TargetName="btnbg" />
                                                                         </Trigger>
                                                                     </ControlTemplate.Triggers>
                                                                 </ControlTemplate>
@@ -91,7 +91,7 @@
                                                                             <Setter Property="Source"  Value="/Image/back_over.png" TargetName="btnbg" />
                                                                         </Trigger>
                                                                         <Trigger Property="IsPressed" Value="True">
-                                                                            <Setter Property="Source" Value="/Image/back_press.png" TargetName="btnbg" />
+                                                                            <Setter Property="Source" Value="/Image/back_normal.png" TargetName="btnbg" />
                                                                         </Trigger>
                                                                     </ControlTemplate.Triggers>
                                                                 </ControlTemplate>
@@ -112,7 +112,28 @@
                                                                             <Setter Property="Source"  Value="/Image/minimize_over.png" TargetName="btnbg" />
                                                                         </Trigger>
                                                                         <Trigger Property="IsPressed" Value="True">
-                                                                            <Setter Property="Source" Value="/Image/minimize_press.png" TargetName="btnbg" />
+                                                                            <Setter Property="Source" Value="/Image/minimize_normal.png" TargetName="btnbg" />
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                            <Button  Width="25" Height="25" Margin="2 0 6 0" Click="btn_max_Click">
+                                                <Button.Style>
+                                                    <Style TargetType="{x:Type Button}">
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                                    <Image Name="btnbg" Source="/Image/mini_normal.png" />
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter Property="Source"  Value="/Image/mini_over.png" TargetName="btnbg" />
+                                                                        </Trigger>
+                                                                        <Trigger Property="IsPressed" Value="True">
+                                                                            <Setter Property="Source" Value="/Image/mini_normal.png" TargetName="btnbg" />
                                                                         </Trigger>
                                                                     </ControlTemplate.Triggers>
                                                                 </ControlTemplate>
@@ -133,7 +154,7 @@
                                                                             <Setter Property="Source"  Value="/Image/close_over.png" TargetName="btnbg" />
                                                                         </Trigger>
                                                                         <Trigger Property="IsPressed" Value="True">
-                                                                            <Setter Property="Source" Value="/Image/close_press.png" TargetName="btnbg" />
+                                                                            <Setter Property="Source" Value="/Image/close_normal.png" TargetName="btnbg" />
                                                                         </Trigger>
                                                                     </ControlTemplate.Triggers>
                                                                 </ControlTemplate>
@@ -401,33 +422,16 @@
                      HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
             <TabItem Header="主页" Style="{StaticResource HomeStyle}">
 
-                <Grid Background="#FFFFFFFF">
+                <Grid>
+                    <Grid.Background>
+                        <ImageBrush ImageSource="Image/bgr.jpg"/>
+                    </Grid.Background>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="64"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <StackPanel x:Name="toolbar" Orientation="Horizontal" HorizontalAlignment="Right"  Grid.Row="0" >
-                        <Button Width="32" Height="32" Margin="2 0 16 0">
-                            <Button.Style>
-                                <Style TargetType="{x:Type Button}">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type Button}">
-                                                <Image Name="btnbg" Source="/Image/download_normal.png" />
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="Source"  Value="/Image/download_over.png" TargetName="btnbg" />
-                                                    </Trigger>
-                                                    <Trigger Property="IsPressed" Value="True">
-                                                        <Setter Property="Source" Value="/Image/download_press.png" TargetName="btnbg" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </Button.Style>
-                        </Button>
+                        
                         <Button Width="32" Height="32" Margin="2 0 8 0" Click="bookmark_show">
                             <Button.Style>
                                 <Style TargetType="{x:Type Button}">
@@ -449,24 +453,7 @@
                                 </Style>
                             </Button.Style>
                         </Button>
-                        <Button x:Name="btn_max"  Width="32" Height="36" Margin="2 0 16 0" Click="btn_max_Click">
-                            <Button.Style>
-                                <Style TargetType="{x:Type Button}">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type Button}">
-                                                <Image Name="btnbg" Source="/Image/maximize_out_normal.png" />
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="Source"  Value="/Image/maximize_out_over.png" TargetName="btnbg" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </Button.Style>
-                        </Button>
+                        
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  Grid.Row="1" VerticalAlignment="Top" Margin="0,32,0,0" >
                         <TextBox x:Name="InputUri"  Height="28" Width="384" Margin="5" FontWeight="Normal"
@@ -525,7 +512,7 @@
                                                             <Setter Property="Source"  Value="/Image/close_over.png" TargetName="btnbg" />
                                                         </Trigger>
                                                         <Trigger Property="IsPressed" Value="True">
-                                                            <Setter Property="Source" Value="/Image/close_press.png" TargetName="btnbg" />
+                                                            <Setter Property="Source" Value="/Image/close_normal.png" TargetName="btnbg" />
                                                         </Trigger>
                                                     </ControlTemplate.Triggers>
                                                 </ControlTemplate>

@@ -10,6 +10,8 @@ using System.IO;
 using System.Windows.Markup;
 using System.Xml;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Threading;
 
 namespace Ubrowser
 {
@@ -29,7 +31,7 @@ namespace Ubrowser
 
         }
 
-        #region 标题栏事件
+        #region 标题栏事件：最小化、最大化和关闭
 
         /// <summary>
         /// 窗口移动事件
@@ -119,17 +121,18 @@ namespace Ubrowser
 
         #endregion 标题栏事件
 
-        #region 标签新建和关闭
+        #region 标签新建和关闭：Item创建事件和关闭事件
         /// <summary>
-        /// 
+        /// 主页的链接跳转按钮事件
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void btn_new_page(object sender, RoutedEventArgs e)
         {
             uri_jump();
         }
 
+        /// <summary>
+        /// 主页的输入框回车事件
+        /// </summary>
         private void InputUri_KeyDown(object sender, KeyEventArgs e)
         {
             if (Key.Enter == e.Key)
@@ -138,6 +141,9 @@ namespace Ubrowser
             }
         }
 
+        /// <summary>
+        /// Uri跳转
+        /// </summary>
         private void uri_jump()
         {
             Uri uri;
@@ -159,12 +165,10 @@ namespace Ubrowser
             CreateNewTab(uri);
             InputUri.Text = "";
         }
-
-        private void new_page()
-        {
-
-        }
-
+        
+        /// <summary>
+        /// TabItem关闭事件
+        /// </summary>
         private void Button_clo_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
@@ -182,6 +186,8 @@ namespace Ubrowser
             {
                 if (item.Header.ToString() == header)
                 {
+                    WebBrowser wb = (WebBrowser)item.Content;
+                    wb.Dispose();
                     tab_control.Items.Remove(item);
                     break;
                 }
@@ -189,8 +195,12 @@ namespace Ubrowser
         }
         #endregion 标签新建和关闭
         
-        #region 在当前窗口打开网页
+        #region 在当前窗口打开网页：创建Item的实际实现、当前页面打开链接、标题关联
 
+        /// <summary>
+        /// 关闭程序时，关闭所有资源
+        /// </summary>
+        /// <param name="e"></param>
         //关闭窗口时，关闭所有浏览器页面（似乎没有明显效果）
         protected override void OnClosing(CancelEventArgs e)
         {
@@ -211,29 +221,33 @@ namespace Ubrowser
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
+        /// <summary>
+        /// 创建新的网页Item
+        /// </summary>
+        /// <param name="uri"></param>
         private void CreateNewTab(Uri uri)
         {
             var webBrowser = new WebBrowser { Source = uri };
             webBrowser.Navigated += new NavigatedEventHandler(WebBrowserOnNavigated);
+            webBrowser.LoadCompleted += new LoadCompletedEventHandler(WebBrowserOnNavigated); 
 
             var tabItem = new TabItem { Content = webBrowser, Header = "正在加载..." };
 
             var webBrowserHelper = new WebBrowserHelper(webBrowser);
             HelperRegistery.SetHelperInstance(tabItem, webBrowserHelper);
             webBrowserHelper.NewWindow += WebBrowserOnNewWindow;
-            SuppressScriptErrors(webBrowser, true);
+            //SuppressScriptErrors(webBrowser, true);
 
             tab_control.Items.Add(tabItem);
             tabItem.IsSelected = true;
 
         }
 
-        //禁止js出错提示
+        /// <summary>
+        /// 禁止js出错提示        
+        /// /// </summary>
+        /// <param name="webBrowser"></param>
+        /// <param name="hide"></param>
         static void SuppressScriptErrors(WebBrowser webBrowser, bool hide)
         {
             webBrowser.Navigating += (s, e) =>
@@ -250,28 +264,67 @@ namespace Ubrowser
             };
         }
 
+        /// <summary>  
+        /// 设置浏览器静默，不弹错误提示框  
+        /// </summary>  
+        /// <param name="webBrowser">要设置的WebBrowser控件浏览器</param>  
+        /// <param name="silent">是否静默</param>  
+        private void SetWebBrowserSilent(WebBrowser webBrowser, bool silent)
+        {
+            FieldInfo fi = typeof(WebBrowser).GetField("_axIWebBrowser2", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (fi != null)
+            {
+                object browser = fi.GetValue(webBrowser);
+                if (browser != null)
+                    browser.GetType().InvokeMember("Silent", BindingFlags.SetProperty, null, browser, new object[] { silent });
+            }
+        }
 
-        //窗口页面标题栏 = 网页标题
+        /// <summary>
+        /// 窗口页面标题栏 关联 浏览器的标题，事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WebBrowserOnNavigated(object sender, NavigationEventArgs e)
         {
             dynamic browser = sender;
+
+            setTitle(browser);
+
+            SetWebBrowserSilent(browser,true);
+            print("new new");
+            
+        }
+        
+        /// <summary>
+        /// 将浏览器的网页标题 写给 Item标题
+        /// </summary>
+        /// <param name="browser"></param>
+        private void setTitle(WebBrowser browser)
+        {
             try
             {
-                TabItem item = browser.Parent;
+                TabItem item = (TabItem)browser.Parent;
                 IHTMLDocument2 doc = (IHTMLDocument2)browser.Document;
                 String str = doc.title;
                 str = (str.Length < 10 ? str : str.Substring(0, 10));
                 item.Header = str;
 
-                if (str.Equals("")) {
-                    item.Header = "无标题";
+                if (str.Equals(""))
+                {
+                    item.Header = "正在加载...";
                 }
-                
                 print(doc.title);
+
             }
             catch (Exception) { }
         }
 
+        /// <summary>
+        /// 使得网页跳转在当前程序进行
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WebBrowserOnNewWindow(object sender, CancelEventArgs e)
         {
             dynamic browser = sender;
@@ -279,8 +332,8 @@ namespace Ubrowser
             // 这儿是在新窗口中打开，如果要在内部打开，改变当前browser的Source就行了
             try
             {
-                Uri link = activeElement.ToString();
-                CreateNewTab(link);
+                var link = activeElement.ToString();
+                CreateNewTab(new Uri(link));
                 e.Cancel = true;
             }
             catch (Exception) { }
@@ -288,12 +341,22 @@ namespace Ubrowser
 
         #endregion 在当前窗口打开网页
 
-        #region 书签
+        #region 书签界面的显示和关闭
+        /// <summary>
+        /// 显示书签界面
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bookmark_show(object sender, RoutedEventArgs e)
         {
             bookmark.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// 隐藏书签界面
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bookmark_close(object sender, RoutedEventArgs e)
         {
             bookmark.Visibility = Visibility.Hidden;
@@ -301,9 +364,15 @@ namespace Ubrowser
 
         #endregion
 
-        #region 前进、后退和书签
-        //加入书签
-        private int select;
+        #region 前进、后退和新增书签，事件
+
+        private int select;//新增书签Item 和 原有网页Item 跳转，保存原有网页Item的位置
+
+        /// <summary>
+        /// 顶栏新增书签按钮点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void addBookmark_Click(object sender, RoutedEventArgs e)
         {
             if (isMainPage())
@@ -322,7 +391,11 @@ namespace Ubrowser
             addbokmarkview.IsSelected = true;
         }
 
-        //添加书签
+        /// <summary>
+        /// 新增书签界面，确定添加书签
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             addbokmarkview.Visibility = Visibility.Collapsed;
@@ -332,6 +405,22 @@ namespace Ubrowser
             writeBookmark(browser_title.Text, browser_uri.Text);
         }
 
+        /// <summary>
+        /// 新增书签界面，取消添加书签
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            addbokmarkview.Visibility = Visibility.Collapsed;
+            ((TabItem)tab_control.Items.GetItemAt(select)).IsSelected = true;
+        }
+
+        /// <summary>
+        /// 将书签添加到书签栏界面
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="uri"></param>
         private void add_bm_toView(String title,String uri)
         {
             title = (title.Length<10 ? title:title.Substring(0,10));
@@ -351,6 +440,11 @@ namespace Ubrowser
             thebookmark.Children.Add(btn);
         }
 
+        /// <summary>
+        /// 书签栏中书签点击事件，在新页面打开链接
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void bookmark_click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
@@ -366,14 +460,11 @@ namespace Ubrowser
             CreateNewTab(uri);
         }
 
-            //取消添加书签
-            private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            addbokmarkview.Visibility = Visibility.Collapsed;
-            ((TabItem)tab_control.Items.GetItemAt(select)).IsSelected = true;
-        }
-
-        //网页后退
+        /// <summary>
+        /// 网页后退
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pageBack_Click(object sender, RoutedEventArgs e)
         {
             if (isMainPage())
@@ -382,8 +473,12 @@ namespace Ubrowser
             if (wb.CanGoBack)
                 wb.GoBack();
         }
-
-        //网页前进
+        
+        /// <summary>
+        /// 网页前进
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pageForward_Click(object sender, RoutedEventArgs e)
         {
             if (isMainPage())
@@ -392,8 +487,11 @@ namespace Ubrowser
             if(wb.CanGoForward)
                 wb.GoForward();
         }
-
-        //判断是不是主页
+        
+        /// <summary>
+        /// 判断是不是主页
+        /// </summary>
+        /// <returns></returns>
         private bool isMainPage()
         {
             TabItem item = (TabItem)tab_control.SelectedItem;
@@ -402,6 +500,10 @@ namespace Ubrowser
             return false;
         }
 
+        /// <summary>
+        /// 获取当前正在显示的的Item
+        /// </summary>
+        /// <returns></returns>
         private WebBrowser getCurrentPage()
         {
             TabItem item = (TabItem)tab_control.SelectedItem;
@@ -425,22 +527,13 @@ namespace Ubrowser
 
         #endregion
 
-        #region 书签本地存储
-        private void tryWrite()
-        {
-            XmlTextWriter writer = new XmlTextWriter("bookmark.xml", null);
-            //写入根元素
-            writer.WriteStartElement("items");
-            //加入子元素
-            writer.WriteElementString("title", "Unreal Tournament 2003");
-            writer.WriteElementString("title", "C&C: Renegade");
-            writer.WriteElementString("title", "Dr. Seuss's ABC");
-            //关闭根元素，并书写结束标签
-            writer.WriteEndElement();
-            //将XML写入文件并且关闭XmlTextWriter
-            writer.Close();
-        }
-
+        #region 书签的XML本地存储
+        
+        /// <summary>
+        /// 写入一条书签到XML文件
+        /// </summary>
+        /// <param name="title">书签标题</param>
+        /// <param name="uri">书签链接</param>
         private void writeBookmark(String title, String uri)
         {
             xml_is_exist();//判断XML文件是否存在，不存在则创建
@@ -469,6 +562,10 @@ namespace Ubrowser
             xmlDoc.Save("bookmark.xml");
         }
 
+        /// <summary>
+        /// 读取全部书签
+        /// </summary>
+        /// <returns>XML中全部书签信息</returns>
         private List<String> readBookmark()
         {
             List<String> list = new List<string>();
@@ -492,6 +589,9 @@ namespace Ubrowser
             return list;
         }
 
+        /// <summary>
+        /// 判断XML是否已存在，不存在则新建，并初始化
+        /// </summary>
         private void xml_is_exist()
         {
             try
@@ -517,11 +617,20 @@ namespace Ubrowser
 
         #endregion
 
-
+        #region 其它
+        /// <summary>
+        /// 用以输出log
+        /// </summary>
+        /// <param name="str"></param>
         private void print(String str) {
             Console.WriteLine("--- "+str+" ---");
         }
 
+        /// <summary>
+        /// 程序启动时，加载书签
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //tryWrite();
@@ -535,6 +644,7 @@ namespace Ubrowser
             }
 
         }
+        #endregion
 
     }
 }

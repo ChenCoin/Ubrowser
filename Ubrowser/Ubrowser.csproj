@@ -168,11 +168,16 @@
     <Resource Include="Image\back_press.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Image\mini_normal.png" />
+    <Resource Include="Image\mini_over.png" />
     <Resource Include="Image\bookmarks_normal.png" />
     <Resource Include="Image\bookmarks_over.png" />
     <Resource Include="Image\download_normal.png" />
     <Resource Include="Image\download_over.png" />
     <Resource Include="Image\download_press.png" />
+    <Resource Include="Image\bookmark_normal.png" />
+    <Resource Include="Image\bookmark_over.png" />
+    <Resource Include="Image\bgr.jpg" />
     <Content Include="Image\maximize_in_normal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
