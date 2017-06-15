@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Ubrowser.exe" size="519080">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Ubrowser.exe" size="854440">
       <assemblyIdentity name="Ubrowser" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>rj1ldlyQ3Qn926yNp3sxcfRG1xPalisfWcz5ZIMUkQA=</dsig:DigestValue>
+        <dsig:DigestValue>Qwsco4V9/uHmlRLKza/wCsjgocIdohz9XoRHCHTAqy8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

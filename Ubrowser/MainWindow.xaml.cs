@@ -26,11 +26,6 @@ namespace Ubrowser
             InitializeComponent();
         }
 
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
         #region 标题栏事件：最小化、最大化和关闭
 
         /// <summary>
@@ -293,7 +288,8 @@ namespace Ubrowser
 
             SetWebBrowserSilent(browser,true);
             print("new new");
-            
+
+            function_btn_show_or_hide();
         }
         
         /// <summary>
@@ -518,10 +514,14 @@ namespace Ubrowser
                 }
             }
             */
-            if (item.Content is WebBrowser)
+            try
             {
-                return (WebBrowser)item.Content;
+                if (item.Content is WebBrowser)
+                {
+                    return (WebBrowser)item.Content;
+                }
             }
+            catch (Exception){}
             return new WebBrowser();
         }
 
@@ -588,7 +588,7 @@ namespace Ubrowser
 
             return list;
         }
-
+        
         /// <summary>
         /// 判断XML是否已存在，不存在则新建，并初始化
         /// </summary>
@@ -617,6 +617,63 @@ namespace Ubrowser
 
         #endregion
 
+        #region 顶栏按钮的显示与隐藏
+
+        private void function_btn_show_or_hide()
+        {
+            TabItem item = (TabItem)tab_control.SelectedItem;
+            WebBrowser browser = getCurrentPage();
+            Button btn_book = (Button)tab_control.Template.FindName("btn_bookmark", tab_control);
+            Button btn_back = (Button)tab_control.Template.FindName("btn_back", tab_control);
+            Button btn_forward = (Button)tab_control.Template.FindName("btn_forward", tab_control);
+
+            //在主页时不现实按钮
+            String str;
+            try
+            {
+                str = (String)item.Header;
+            }
+            catch (Exception)
+            {
+                str = "";
+            }
+            if (str.Equals("主页"))
+            {
+                btn_book.Visibility = Visibility.Collapsed;
+                btn_back.Visibility = Visibility.Collapsed;
+                btn_forward.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                btn_book.Visibility = Visibility.Visible;
+                btn_back.Visibility = Visibility.Visible;
+                btn_forward.Visibility = Visibility.Visible;
+            }
+
+            //返回按钮
+            if (browser.CanGoBack)
+            {
+                btn_back.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                btn_back.Visibility = Visibility.Collapsed;
+            }
+
+            //前进按钮
+            if (browser.CanGoForward)
+            {
+                btn_forward.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                btn_forward.Visibility = Visibility.Collapsed;
+            }
+         
+        }
+
+        #endregion
+
         #region 其它
         /// <summary>
         /// 用以输出log
@@ -624,6 +681,16 @@ namespace Ubrowser
         /// <param name="str"></param>
         private void print(String str) {
             Console.WriteLine("--- "+str+" ---");
+        }
+        
+        /// <summary>
+        /// 程序的浏览器页面切换事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            function_btn_show_or_hide();
         }
 
         /// <summary>
@@ -642,6 +709,8 @@ namespace Ubrowser
                 Console.WriteLine(list[i].ToString());
                 add_bm_toView(list[i].ToString(), list[i+1].ToString());
             }
+
+            function_btn_show_or_hide();
 
         }
         #endregion

@@ -37,7 +37,7 @@
                                     <Border Background="{StaticResource TabControl.HeaderBackGround}" Name="Mask" CornerRadius="0,0,0,0"
                                             MouseMove="TitleBar_MouseMove" MouseDown="TitleBar_MouseDown">
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                            <Button  Width="25" Height="25" Margin="2 0 6 0" Click="addBookmark_Click">
+                                            <Button x:Name="btn_bookmark"  Width="25" Height="25" Margin="2 0 6 0" Click="addBookmark_Click">
                                                 <Button.Style>
                                                     <Style TargetType="{x:Type Button}">
                                                         <Setter Property="Template">
@@ -58,7 +58,7 @@
                                                     </Style>
                                                 </Button.Style>
                                             </Button>
-                                            <Button  Width="25" Height="25" Margin="2 0 6 0" Click="pageForward_Click">
+                                            <Button x:Name="btn_forward"  Width="25" Height="25" Margin="2 0 6 0" Click="pageForward_Click">
                                                 <Button.Style>
                                                     <Style TargetType="{x:Type Button}">
                                                         <Setter Property="Template">
@@ -79,7 +79,7 @@
                                                     </Style>
                                                 </Button.Style>
                                             </Button>
-                                            <Button  Width="25" Height="25" Margin="2 0 6 0" Click="pageBack_Click">
+                                            <Button x:Name="btn_back"  Width="25" Height="25" Margin="2 0 6 0" Click="pageBack_Click">
                                                 <Button.Style>
                                                     <Style TargetType="{x:Type Button}">
                                                         <Setter Property="Template">
@@ -424,7 +424,7 @@
 
                 <Grid>
                     <Grid.Background>
-                        <ImageBrush ImageSource="Image/bgr.jpg"/>
+                        <ImageBrush ImageSource="Image/bgr3.jpg"/>
                     </Grid.Background>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="64"/>
@@ -481,9 +481,9 @@
                         <Button Content="进入" Height="28" Width="48" BorderBrush="LightGray" BorderThickness="1" FontWeight="Normal" Click="btn_new_page">
                             <Button.Template>
                                 <ControlTemplate TargetType="{x:Type Button}">
-                                    <Border BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="0" CornerRadius="8" Name="PART_Background">
+                                    <Border BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="0" Name="PART_Background">
                                         <Border.Background>
-                                            <SolidColorBrush Color="#FF81C2D6"/>
+                                            <SolidColorBrush Color="#FFFFFF"/>
                                         </Border.Background>
                                         <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     </Border>

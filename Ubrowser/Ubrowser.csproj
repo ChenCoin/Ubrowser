@@ -178,6 +178,8 @@
     <Resource Include="Image\bookmark_normal.png" />
     <Resource Include="Image\bookmark_over.png" />
     <Resource Include="Image\bgr.jpg" />
+    <Resource Include="Image\bgr2.jpg" />
+    <Resource Include="Image\bgr3.jpg" />
     <Content Include="Image\maximize_in_normal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
